@@ -1,6 +1,18 @@
 # 系统声音按设备配置
 
-所有播放设备默认恢复“系统声音”50%；可在 `config.json` 中为每个设备设置不同值。支持蓝牙、USB、3.5mm、HDMI 等 Windows 播放端点。继续使用 EarTrumpet 即可。
+改变所有播放设备时，默认恢复“系统声音”50%；可在 `config.json` 中为每个设备设置不同值。支持蓝牙、USB、3.5mm、HDMI 等 Windows 播放端点。
+
+**不依赖 EarTrumpet。** 程序直接调用 Windows Core Audio 接口，卸载或关闭 EarTrumpet 后仍能工作，也能和 Windows 自带音量混音器一起使用。
+
+但不能说兼容所有 Windows：
+
+- **Windows 10/11 x64**：当前支持目标；已在你的 Windows 11 上实测。
+- **32 位 Windows**：当前编译版本不能直接运行。
+- **Windows ARM、Windows 7/8**：尚未验证。
+
+依赖是 Windows 自带的 **.NET Framework 4.x 和 PowerShell 5.1**，通常无需额外安装。蓝牙、USB、3.5mm、HDMI 都按 Windows 音频端点统一处理。
+
+换电脑时复制整个项目文件夹，删除原电脑的 `config.json` 和 `devices.json`，再运行 `Start.cmd`，即可扫描并生成新电脑的配置；登录自启动需要自行配置，如下命令所示。
 
 ## 日常使用
 
@@ -8,7 +20,7 @@
 - 双击 `Stop.cmd`：停止当前后台程序。
 - 编辑 `config.json` 并保存：后台程序通常在 1 秒左右重新应用配置。
 - 程序在启动、播放设备接入/重新启用、默认播放设备切换、系统声音会话出现时应用音量。设备/会话初始化可能带来额外延迟。
-- 临时在 EarTrumpet 中调整后会保持，直到下一次上述触发。不自动记录手动调整。
+- 临时在 EarTrumpet 中调整后会保持，直到下一次上述触发。不自动记录手动调整，只能修改配置文件来调整音量。
 - 新设备或没有单独配置的设备采用 `defaultVolumePercent`。
 - 每次后台程序实际启动后，扫描 Windows 已登记的输出设备并增量补入配置（包含离线设备）。已有设备的音量和备注保持不变，新项使用全局默认音量；重复启动不会产生重复条目。
 
@@ -56,7 +68,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\Control.ps1 -Action St
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\Control.ps1 -Action Apply
 # 扫描并增量补充设备配置（保留已有设置）
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\Control.ps1 -Action SyncDevices
-# 添加当前用户的登录启动快捷方式（不改变全局执行策略）
+# 添加当前用户的登录自动启动快捷方式（不改变全局执行策略）
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\Control.ps1 -Action InstallStartup
 # 删除本工具的登录启动快捷方式；当前实例用 Stop.cmd 停止
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\Control.ps1 -Action RemoveStartup
