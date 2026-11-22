@@ -1,0 +1,10 @@
+{
+  "defaultVolumePercent": 50,
+  "devices": [
+    {
+      "id": "在这里粘贴 devices.json 中的设备 id",
+      "name": "设备名称，仅作备注",
+      "volumePercent": 50
+    }
+  ]
+}

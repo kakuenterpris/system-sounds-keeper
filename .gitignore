@@ -1,0 +1,5 @@
+bin/
+logs/
+devices.json
+config.json
+*.tmp
